@@ -1,13 +1,17 @@
-# id2223-2
+# ID2223 Lab 2 - Fact Checker
 Submission for ID2223 HT24 Lab 2 from Group 4
 
 ## Task 1
-During the first week of working on this assignment, we had spent considerable amount of time trying run inference sufficiently fast without GPU on free HuggingFace Spaces. We initially used a heavily quantized ([`iq2-xxs`](https://github.com/ggerganov/llama.cpp/blob/master/examples/quantize/quantize.cpp#L23))  [Llama-3.2-1B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct) based fine tuned model, exported as GGUF and used [`llama-cpp-python`](https://llama-cpp-python.readthedocs.io/en/latest/) in the Spaces runtime for inference.
+### Inference
+During the first week of working on this assignment, we had spent considerable amount of time trying run inference sufficiently fast without GPU on free HuggingFace Spaces. We initially used a heavily quantized ([`iq2-xxs`](https://github.com/ggerganov/llama.cpp/blob/master/examples/quantize/quantize.cpp#L23))  [Llama-3.2-1B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct) based fine tuned model, exported in [GGUF](https://huggingface.co/docs/hub/en/gguf) format and used [`llama-cpp-python`](https://llama-cpp-python.readthedocs.io/en/latest/) in the Spaces runtime for inference.
 
-But since Jim mentioned last week that we can [demo the inference on Colab itself](https://canvas.kth.se/courses/50172/discussion_topics/432284), we scrapped those plans and restarted with Llama-3B-Instruct.
+But since Jim mentioned last week that we can [demo the inference on Colab itself](https://canvas.kth.se/courses/50172/discussion_topics/432284), we scrapped those plans and restarted with Llama-3B-Instruct. We use [`unsloth`](https://docs.unsloth.ai/basics/inference) for the inference pipeline as well, levergaing the GPU.
+
+### UI
+The UI is built with [Gradio](https://www.gradio.app/docs/gradio/interface), presenting the user with a prompt input and output, with additional prefilled but modifiable inputs for the system prompt and some model tweaks.
 
 ## Task 2
-### Initial Approach
+### Initial idea
 
 To improve our model's results compared to Task 1, we initially considered fine-tuning with a new dataset, specifically the [FEVER](https://huggingface.co/datasets/fever/fever) dataset. However, we realized the dataset is not in a chat template and we may not get enough time to write a proper converter to Llama chat template before the submission deadline.
 
