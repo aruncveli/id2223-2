@@ -1,6 +1,12 @@
 # ID2223 Lab 2 - Fact Checker
 Submission for ID2223 HT24 Lab 2 from Group 4
 
+As part of this lab, we fine tune Llama 3.2 model for instruction following and present its inference pipeline as a fact checker UI - enter a potentially incorrect statement, and the system will generate the correct version of it. 
+
+Although LLMs cannot be as considered perfect fact checkers mainly due to their potential to hallucinate, we observe that one which is tuned using a [dataset](https://huggingface.co/datasets/mlabonne/FineTome-100k) intended for [instruction following](https://huggingface.co/datasets/arcee-ai/The-Tome#:~:text=a%20focus%20on-,instruction%20following,-.%20It%20was%20used) and curated with [high education value information](https://huggingface.co/datasets/arcee-ai/The-Tome#:~:text=Educational%20Value%20Scoring) can:
+* check and correct *popular* facts (before their knowledge cutoff)
+* follows the system prompt that it needs to be strict and concise
+
 ## Task 1
 ### Inference
 During the first week of working on this assignment, we had spent considerable amount of time trying run inference sufficiently fast without GPU on free HuggingFace Spaces. We initially used a heavily quantized ([`iq2-xxs`](https://github.com/ggerganov/llama.cpp/blob/master/examples/quantize/quantize.cpp#L23))  [Llama-3.2-1B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct) based fine tuned model, exported in [GGUF](https://huggingface.co/docs/hub/en/gguf) format and used [`llama-cpp-python`](https://llama-cpp-python.readthedocs.io/en/latest/) in the Spaces runtime for inference.
@@ -15,11 +21,11 @@ The UI is built with [Gradio](https://www.gradio.app/docs/gradio/interface), pre
 
 To improve our model's results compared to Task 1, we initially considered fine-tuning with a new dataset, specifically the [FEVER](https://huggingface.co/datasets/fever/fever) dataset. However, we realized the dataset is not in a chat template and we may not get enough time to write a proper converter to Llama chat template before the submission deadline.
 
-Incorporating a conversation-based system prompt was essential for our task. Consequently, we shifted our focus to optimizing the model's hyperparameters.
+Incorporating a conversation or Q&A based system prompt was essential for our task. Consequently, we shifted our focus to optimizing the model's hyperparameters.
 
 ### Model Selection
 
-We observed during Task 1 that the Colab runtime's max GPU usage during training was around 4 GB out of ~12GB, indicating its capacity to train a larger model. Based on this, we upgraded to Llama 3.2 with 3B parameters (from 1B) while maintaining 4Q quantization.
+We observed during Task 1 that the Colab runtime's max GPU usage during training was around 4 GB out of ~15GB, indicating its capacity to train a larger model. Based on this, we upgraded to Llama 3.2 with 3B parameters (from 1B) while maintaining 4Q quantization.
 
 ### Hyperparameter Tuning
 
@@ -34,7 +40,7 @@ Additionally:
 Training was conducted over one epoch due to time constraints.
 
 ### Results
-With the system prompt asking the model to be a strict fact checker and respond as consicely as possible, for the input *Berlin is a capital of Sweden*
+With the system prompt asking the model to be a strict fact checker and respond as consicely as possible, for the input *Berlin is a capital of Sweden*:
 
 * Task 1 model responded: *Berlin is not a capital of Sweden. Berlin is actually the capital of Germany.*
 * Task 2 model responded: *Berlin is the capital of Germany.*
